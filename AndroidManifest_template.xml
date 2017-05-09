@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.lottomatica.gev"
+    android:versionCode="@VERSION_CODE@"
+    android:versionName="@VERSION_NAME@" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="11" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- This app has permission to register and receive data message. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.lottomatica.gev.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.lottomatica.gev.permission.C2D_MESSAGE" />
+
+    <application
+        android:name="com.lottomatica.gev.application.GrattaEVinciApplication"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/icon"
+        android:label="@APP_NAME@"
+        android:largeHeap="true"
+        android:launchMode="singleTop"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+<!--        <receiver
+            android:name="com.lottomatica.gev.pushnotification.GcmBroadcastReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.lottomatica.gev" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.lottomatica.gev.pushnotification.GcmIntentService" />
+-->
+        <activity
+            android:name="com.lottomatica.gev.activities.SplashScreen"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="gev" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.lottomatica.gev.activities.VetrinaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lottomatica.gev.activities.GiocoActivity"
+            android:hardwareAccelerated="false" />
+		<activity 
+            android:name="com.lottomatica.gev.activities.JLotteryActivity"
+            android:configChanges="keyboardHidden|orientation"/>
+        <meta-data
+            android:name="CHECKVERSION_URL"
+            android:value="@CHECKVERSION_URL@" />
+
+        <meta-data
+            android:name="LOG"
+            android:value="@LOG@" />
+
+        <meta-data
+            android:name="CLIENT"
+            android:value="@CLIENT@" />
+    </application>
+
+</manifest>
