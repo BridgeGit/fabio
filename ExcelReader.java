@@ -973,4 +973,140 @@ public class ExcelReader {
 		}
 	}
 
+	public static BigDecimal getBigDecimalCellValue(Row myRow,int position) {
+		BigDecimal value = getBigDecimalValue(myRow,position);
+		if (value == null)
+			value = BigDecimal.ZERO;
+		return value;
+	}
+
+	/**
+	 * fileContainsNegativeNumbers : Metodo utilizzato per controllare la presenza di numeri negativi nelle celle di un foglio excel.
+	 * 
+	 * @author Fabio Ponte
+	 * @param file : Il file excel caricato con i dati da importare.
+	 * @param template : Il template del file di export.
+	 * @return restituisce un boolean true se sono presenti numeri negativi altrimenti restituisce false
+	 * @throws IOException
+	 * @throws InvalidExcelException
+	 */
+	public static boolean fileContainsNegativeNumbers(UploadedFile file,XlsExportTemplate template) throws IOException,InvalidExcelException {
+		try {
+			Workbook wb = null;
+			try {
+				wb = new HSSFWorkbook(file.getInputstream());
+			}
+			catch(Exception e) {
+				wb = StreamingReader.builder().rowCacheSize(100).bufferSize(4096).open(file.getInputstream());
+			}
+			String filename = file.getFileName();
+			String[] tokens = filename.split("_");
+			String tipoImpianto = tokens[3];
+			if(!tokens[3].equals("T") && !tokens[3].equals("X")) {
+				throw new InvalidExcelException("Nome file ("+filename+") non valido.");
+			}
+			int sheetNum = wb.getNumberOfSheets();
+			for(int i = 2; i < sheetNum; i++){
+				Sheet sheet = wb.getSheetAt(i);
+				Iterator<Row> rowIter = sheet.rowIterator();
+				if(i == 4)
+					skip(rowIter,1);
+				else
+					skip(rowIter,2);
+				int indice = 0;
+				while(rowIter.hasNext()) {
+					indice++;
+					Row row = rowIter.next();
+					if(tipoImpianto.equals("T")) {
+						if(i == 2) {
+							if(!verifyIfRowProdEnergiaProdottaIsEmpty(row,indice,template)) {
+				 				if((getBigDecimalCellValue(row, EN_PR_POTENZA_EFFICIENTE_LORDA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_PRODUZIONE_LORDA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_ENERGIA_ASSORBITA_PER_SA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_DI_CUI_ASSORBITI)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_ENERGIA_PRELEVATA_DALLA_RETE)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_IMMESSA_SU_RETE_PUBBLICA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+						if(i == 3) {
+							if(!verifyIfRowProdUtilizzoEnergiaIsEmpty(row,indice,template)) {
+								if((getBigDecimalCellValue(row, EN_UE_NUMERO_UTENZE)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_UE_QUANTITA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+						if(i == 4) {
+							if(!verifyIfRowProdCombustibiliUtilizzatiIsEmpty(row,indice,template)) {
+				 				if((getBigDecimalCellValue(row, EN_CU_PCI)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_CU_CSE)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_CU_RENDIMENTO_CALDAIA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_CU_QUANTITA_IMPIEGATA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+						if(i == 5) {
+							if(!verifyIfRowProdTUtilizziCaloreIsEmpty(row,indice,template)) {
+				 				if((getBigDecimalCellValue(row, EN_UC_NUMERO_UTENZE)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_UC_QUANTITA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+						if(i == 6) {
+							if(!verifyIfRowProdTCaloreDigestoreIsEmpty(row,indice,template)) {
+				 				if((getBigDecimalCellValue(row, EN_CD_CALORE_DIGESTORE)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+					}
+					else if(tipoImpianto.equals("X")) {
+						if(i == 2) {
+							if(!verifyIfRowProdEnergiaProdottaIsEmpty(row,indice,template)) {
+				 				if((getBigDecimalCellValue(row, EN_PR_POTENZA_EFFICIENTE_LORDA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_PRODUZIONE_LORDA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_ENERGIA_ASSORBITA_PER_SA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_DI_CUI_ASSORBITI)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_ENERGIA_PRELEVATA_DALLA_RETE)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_PR_IMMESSA_SU_RETE_PUBBLICA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+						if(i == 3) {
+							if(!verifyIfRowProdUtilizzoEnergiaIsEmpty(row,indice,template)) {
+								if((getBigDecimalCellValue(row, EN_UE_NUMERO_UTENZE)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+				 				if((getBigDecimalCellValue(row, EN_UE_QUANTITA)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+						if(i == 4) {
+							if(!verifyIfRowProdXPompaggiIsEmpty(row,indice,template)) {
+				 				if((getBigDecimalCellValue(row, EN_PO_CONSUMO_POMPAGGIO)).compareTo(BigDecimal.ZERO) < 0)
+									return true;
+							}
+						}
+					}
+				}
+			}
+			return false;
+		}
+		finally {
+			file.getInputstream().close();
+		}
+	}
 }
